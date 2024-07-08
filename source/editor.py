@@ -37,7 +37,7 @@ def add_validation(book: openpyxl.Workbook):
 
 
 def book_edit(load, save):
-    tables = Correspondences.get_correspondences('rules.xlsx')
+    tables = Correspondences.get_correspondences('../settings/rule/data.xlsx')
     book = add_validation(openpyxl.load_workbook(load))
 
     sheet = book['ТИ']  # B -> G, H
@@ -56,10 +56,3 @@ def book_edit(load, save):
 
     book.save(save)
     book.close()
-
-
-if __name__ == '__main__':
-    # for k in os.listdir('C:/Users/user/Desktop/Test/'):
-    #     book_edit(f'C:/Users/user/Desktop/Test/{k}', f'C:/Users/user/Desktop/Result/{k}')
-    book_edit('C:/Users/user/Desktop/Test/ПС 35 Головино.xlsx', 'C:/Users/user/Desktop/Result/ПС 35 Головино 2.xlsx')
-    # book_edit('C:/Users/user/Desktop/Test/ПС 110 Промузел.xlsx', 'C:/Users/user/Desktop/Result/ПС 110 Промузел 2.xlsx')

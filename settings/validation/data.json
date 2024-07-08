@@ -1,0 +1,30 @@
+{
+  "book": "data.xlsx",
+  "inserts": [
+    {
+      "from": "A",
+      "r_from": "1:",
+      "to": "A",
+      "r_to": "1:",
+      "sheet_to": "1"
+    }, {
+      "from": "B",
+      "r_from": "1:",
+      "to": "B",
+      "r_to": "1:",
+      "sheet_to": "1"
+    }, {
+      "from": "C",
+      "r_from": "1:",
+      "to": "A",
+      "r_to": "1:",
+      "sheet_to": "2"
+    }, {
+      "from": "D",
+      "r_from": "1:",
+      "to": "B",
+      "r_to": "1:",
+      "sheet_to": "2"
+    }
+  ]
+}
