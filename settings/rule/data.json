@@ -1,30 +1,34 @@
 {
-  "book": "data.xlsx",
-  "sheets": [
+  "book": "settings/rule/data.xlsx",
+  "rules": [
     {
-      "name": "1",
-      "import": {"from": "A", "to": "A"},
-      "export": [
-        {"from": "B", "to": "B"},
-        {"from": "C", "to": "C"}
-      ],
-      "size": 10
+      "source_sheet": "ТИ",
+      "source_column": "B",
+      "rule_sheet": "Тип ТИ",
+      "rule_column": "A",
+      "results": {"B": "G"},
+      "rule_size": 42
     }, {
-      "name": "2",
-      "import": {"from": "A", "to": "A"},
-      "export": [
-        {"from": "B", "to": "B"},
-        {"from": "C", "to": "C"}
-      ],
-      "size": 10
+      "source_sheet": "ТИ",
+      "source_column": "B",
+      "rule_sheet": "ФИ",
+      "rule_column": "A",
+      "results": {"B": "H"},
+      "rule_size": 15
     }, {
-      "name": "3",
-      "import": {"from": "A", "to": "A"},
-      "export": [
-        {"from": "B", "to": "B"},
-        {"from": "C", "to": "C"}
-      ],
-      "size": 10
+      "source_sheet": "ТС",
+      "source_column": "C",
+      "rule_sheet": "НЗ",
+      "rule_column": "A",
+      "results": {"B": "D"},
+      "rule_size": 42
+    }, {
+      "source_sheet": "ТС",
+      "source_column": "C",
+      "rule_sheet": "Тип ТС",
+      "rule_column": "A",
+      "results": {"B": "E"},
+      "rule_size": 1
     }
   ]
 }

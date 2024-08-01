@@ -1,5 +1,3 @@
-import os
-from utilities import Correspondences
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
 
@@ -34,25 +32,3 @@ def add_validation(book: openpyxl.Workbook):
     rule.add("Q1:Q1048576")
 
     return book
-
-
-def book_edit(load, save):
-    tables = Correspondences.get_correspondences('../settings/rule/data.xlsx')
-    book = add_validation(openpyxl.load_workbook(load))
-
-    sheet = book['ТИ']  # B -> G, H
-    for i in range(2, len(sheet['B'])):
-        if (value := sheet[f'B{i}'].value) is None:
-            break
-        sheet[f'G{i}'].value = tables['Тип ТИ'].find_answer(value)
-        sheet[f'H{i}'].value = tables['ФИ'].find_answer(value)
-
-    sheet = book['ТС']  # C -> D, E
-    for i in range(2, len(sheet['C'])):
-        if (value := sheet[f'C{i}'].value) is None:
-            break
-        sheet[f'D{i}'].value = tables['НЗ'].find_answer(value)
-        # sheet[f'E{i}'].value = tables['Тип ТС'].find_answer(value)
-
-    book.save(save)
-    book.close()

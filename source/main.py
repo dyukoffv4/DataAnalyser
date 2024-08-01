@@ -1,42 +1,75 @@
+from pathlib import Path
+from copy import deepcopy
+from worker import Worker
+
 import argparse
-import json
-import sys
 import os
+import json
+import openpyxl
 
 
-def standard():
-    parser = argparse.ArgumentParser(prog='Data Analyser', description='Fills in Excel column data based on established rules')
-    parser.add_argument('-r', '--rule', default='settings/rule/data.json')
-    parser.add_argument('-d', '--data_validation', nargs='?', const='settings/validation/data.json')
-    parser.add_argument('work_path')
-    parser.add_argument('save_path')
-    args = parser.parse_args()
+class ArgumentList:
+    _data = {
+        'ss': ([], {'prog': 'Data Analyser', 'description': 'Fills in Excel column data based on established rules'}),
+        '-l': (['load_path'], {'help': ''}),
+        '-s': (['save_path'], {'help': ''}),
+        '-r': (['-r', '--rule'], {'default': 'settings/rule/data.json', 'help': ''}),
+        '-d': (['-v', '--validation'], {'nargs': '?', 'const': 'settings/validation/data.json', 'help': ''}),
+        '-c': (['--create'], {'nargs': '1', 'help': ''})
+    }
 
-    if args.data_validation is not None:
-        print('-d is not able yet.')
-        # Todo: make it!
+    @staticmethod
+    def get_args(item):
+        result = ArgumentList._data.get(item)
+        return deepcopy(result[0]) if result is not None else None
 
-    # Todo: open and process .json.
-    # with open(args.rule, 'r') as f:
-    #     data = json.load(f)
-    #     print(data)
+    @staticmethod
+    def get_kwargs(item):
+        result = ArgumentList._data.get(item)
+        return deepcopy(result[1]) if result is not None else None
 
-    if os.path.isdir(args.work_path):
-        for i in os.listdir(args.work_path):
+
+def main(load_path, save_path, rule_path, validation_path):
+    if not os.path.exists(load_path):
+        raise AttributeError(f'File or directory "{load_path}" does not exist!')
+    if validation_path is not None and not os.path.exists(validation_path):
+        raise AttributeError(f'File or directory "{validation_path}" does not exist!')
+    if not os.path.exists(rule_path):
+        raise RuntimeError(f'Error catch while trying to get a rule at "{rule_path}"!')
+
+    with open(rule_path, 'r', encoding='utf-8') as f:
+        settings = json.load(f)
+
+    book = openpyxl.load_workbook(settings['book'])
+    data = {i['source_sheet']: [] for i in settings['rules']}
+    for i in settings['rules']:
+        data[i['source_sheet']] += [Worker(book[i['rule_sheet']], i['source_column'], i['rule_column'], i['results'])]
+    book.close()
+
+    if os.path.isdir(load_path):
+        for i in os.listdir(load_path):
             if i.split('.')[-1] == 'xlsx':
-                print(i)  # Todo: insert worker
-    else:
-        print(args.work_path)  # Todo: insert worker
-
-
-def create_rule():
-    print('create is not able yet.')
-    # Todo: make it!
+                book = openpyxl.load_workbook(Path(load_path) / Path(i))
+                for k in data.keys():
+                    for n in data[k]:
+                        n.process_sheet(book[k])
+                book.save(Path(load_path) / Path(i))
+                book.close()
+    elif os.path.isfile(load_path) and load_path.split('.')[-1] == 'xlsx':
+        book = openpyxl.load_workbook(load_path)
+        for k in data.keys():
+            for n in data[k]:
+                n.process_sheet(book[k])
+        book.save(save_path)
+        book.close()
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3 and sys.argv[1] == 'create':
-        if sys.argv[2] == 'rule':
-            exit(create_rule())
-        raise RuntimeError('Have not such creator')
-    exit(standard())
+    parser = argparse.ArgumentParser(*ArgumentList.get_kwargs('ss'))
+    parser.add_argument(*ArgumentList.get_args('-l'), *ArgumentList.get_kwargs('-l'))
+    parser.add_argument(*ArgumentList.get_args('-s'), *ArgumentList.get_kwargs('-s'))
+    parser.add_argument(*ArgumentList.get_args('-r'), *ArgumentList.get_kwargs('-r'))
+    parser.add_argument(*ArgumentList.get_args('-d'), *ArgumentList.get_kwargs('-d'))
+    args = parser.parse_args()
+
+    main(args.load_path, args.save_path, args.rule_path, args.validation_path)
