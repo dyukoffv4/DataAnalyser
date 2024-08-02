@@ -1,5 +1,5 @@
 from source.model.worker import Worker
-from source.vals import *
+from source.environment import *
 
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
@@ -9,6 +9,7 @@ import pathlib
 
 
 class Controller:
+
     def __init__(self, load_path, save_path=None):
         if not os.path.exists(load_path := pathlib.Path(load_path)):
             raise AttributeError(f'Load path "{load_path}" does not exist!')
@@ -32,8 +33,8 @@ class Controller:
         book = openpyxl.load_workbook(settings['book'])
         data = {i['source_sheet']: [] for i in settings['rules']}
         for i in settings['rules']:
-            data[i['source_sheet']] += [
-                Worker(book[i['rule_sheet']], i['source_column'], i['rule_column'], i['results'])]
+            data[i['source_sheet']] += [Worker(book[i['rule_sheet']], i['source_column'], i['rule_column'],
+                                               i['results'], i['rule_size'])]
         book.close()
 
         if os.path.isdir(self.load_path):
@@ -65,7 +66,8 @@ class Controller:
                 if i.split('.')[-1] == 'xlsx':
                     book = openpyxl.load_workbook(self.load_path / pathlib.Path(i))
                     for k in settings:
-                        rule = DataValidation(type="list", formula1=f'=\'{k["sheet_from"]}\'!{k["from"]}', allow_blank=True)
+                        rule = DataValidation(type="list", formula1=f'=\'{k["sheet_from"]}\'!{k["from"]}',
+                                              allow_blank=True)
                         book[k['sheet_to']].add_data_validation(rule)
                         rule.add(k['to'])
                     book.save(self.save_path / pathlib.Path(i))
