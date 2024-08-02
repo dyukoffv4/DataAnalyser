@@ -1,30 +1,33 @@
-{
-  "book": "data.xlsx",
-  "inserts": [
-    {
-      "from": "A",
-      "r_from": "1:",
-      "to": "A",
-      "r_to": "1:",
-      "sheet_to": "1"
-    }, {
-      "from": "B",
-      "r_from": "1:",
-      "to": "B",
-      "r_to": "1:",
-      "sheet_to": "1"
-    }, {
-      "from": "C",
-      "r_from": "1:",
-      "to": "A",
-      "r_to": "1:",
-      "sheet_to": "2"
-    }, {
-      "from": "D",
-      "r_from": "1:",
-      "to": "B",
-      "r_to": "1:",
-      "sheet_to": "2"
-    }
-  ]
-}
+[
+  {
+    "from": "$A$2:$A$43",
+    "sheet_from": "Тип ТИ",
+    "to": "G1:G1048576",
+    "sheet_to": "ТИ"
+  }, {
+    "from": "$L$2:$L$16",
+    "sheet_from": "Тип ТИ",
+    "to": "H1:H1048576",
+    "sheet_to": "ТИ"
+  }, {
+    "from": "$L$2:$L$16",
+    "sheet_from": "Тип ТИ",
+    "to": "F1:F1048576",
+    "sheet_to": "ТС"
+  }, {
+    "from": "$D$2:$D$43",
+    "sheet_from": "Тип ТИ",
+    "to": "D1:D1048576",
+    "sheet_to": "ТС"
+  }, {
+    "from": "$I$2:$I$193",
+    "sheet_from": "Тип ТИ",
+    "to": "E1:E1048576",
+    "sheet_to": "ТС"
+  }, {
+    "from": "$G$2:$G$6",
+    "sheet_from": "Тип ТИ",
+    "to": "Q1:Q1048576",
+    "sheet_to": "ТС"
+  }
+]
